@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "quotalatch"
+version = "0.1.0a1"
+description = "Persistent shared budgets for AI workers using PostgreSQL"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+dependencies = ["psycopg[binary]>=3.2,<4"]
+
+[project.urls]
+Repository = "https://github.com/valkiara/quotalatch"
+Issues = "https://github.com/valkiara/quotalatch/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<10", "ruff>=0.11,<1"]
+
+[project.scripts]
+quotalatch-demo = "quotalatch.demo:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/quotalatch"]
