@@ -117,6 +117,10 @@ Expired or cancelled keys cannot be reused to create another attempt.
 
 Mutations accept `connection=conn` on a borrowed psycopg connection already inside
 an explicit transaction. Methods use savepoints and never commit the outer transaction.
+Read methods (`inspect_budget`, `get_operation`, `find_operation`, and `events`)
+also accept `connection=conn`, so they can see changes made in that transaction.
+Omitting the connection opens a separate transaction that cannot see uncommitted
+reservations or journal entries. The borrowed connection requirement applies to reads too.
 
 ```python
 import psycopg
@@ -132,6 +136,8 @@ with psycopg.connect(ledger.dsn, autocommit=True) as conn:
             connection=conn,
         )
         # Insert your job/outbox row using conn in this same transaction.
+        assert ledger.find_operation("acme", "job-43:attempt-1", connection=conn) == operation
+        journal = ledger.events("acme", operation.operation_id, connection=conn)
     # Only now is work eligible for dispatch.
 ```
 

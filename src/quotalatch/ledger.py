@@ -268,8 +268,15 @@ class Ledger:
         with self._tx(connection) as conn:
             return self._operation(self._get(conn, tenant_id, operation_id))
 
-    def find_operation(self, tenant_id: str, operation_key: str) -> Operation:
-        with self._tx() as conn:
+    def find_operation(
+        self,
+        tenant_id: str,
+        operation_key: str,
+        *,
+        connection: Connection | None = None,
+    ) -> Operation:
+        """Look up a key, optionally reading the caller's uncommitted transaction."""
+        with self._tx(connection) as conn:
             row = self._one(
                 conn,
                 "SELECT * FROM {s}.operations WHERE tenant_id=%s AND operation_key=%s",
@@ -473,8 +480,15 @@ class Ledger:
                 recovered.append(self._operation(row))
         return recovered
 
-    def events(self, tenant_id: str, operation_id: UUID) -> list[dict]:
-        with self._tx() as conn:
+    def events(
+        self,
+        tenant_id: str,
+        operation_id: UUID,
+        *,
+        connection: Connection | None = None,
+    ) -> list[dict]:
+        """Read the journal, optionally including the caller's uncommitted events."""
+        with self._tx(connection) as conn:
             self._get(conn, tenant_id, operation_id)
             return self._all(
                 conn,
