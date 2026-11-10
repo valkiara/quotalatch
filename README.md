@@ -113,6 +113,9 @@ Cancelling is valid only before dispatch. Unknown holds remain until explicitly
 reconciled; this deliberately trades availability for conservative accounting.
 Expired or cancelled keys cannot be reused to create another attempt.
 
+See the [recovery runbook](docs/recovery.md) for what to do after a worker
+crash, a lost response, or a provider timeout.
+
 ## Share a transaction with your job queue
 
 Mutations accept `connection=conn` on a borrowed psycopg connection already inside
