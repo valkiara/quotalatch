@@ -37,8 +37,19 @@ jobs:
       - run: uv run ruff check .
       - run: uv run ruff format --check .
       - run: uv run pytest
-      - run: uv run quotalatch-demo
       - run: uv build
+      - name: Run crash demo from the installed wheel
+        working-directory: ${{ runner.temp }}
+        run: >
+          uv run --isolated --no-project --python "${{ matrix.python }}"
+          --with "$GITHUB_WORKSPACE"/dist/*.whl
+          quotalatch-demo --schema quotalatch_wheel_smoke
+      - name: Run crash demo from the installed source distribution
+        working-directory: ${{ runner.temp }}
+        run: >
+          uv run --isolated --no-project --python "${{ matrix.python }}"
+          --with "$GITHUB_WORKSPACE"/dist/*.tar.gz
+          quotalatch-demo --schema quotalatch_sdist_smoke
       - uses: actions/upload-artifact@v4
         if: matrix.python == '3.13'
         with:
