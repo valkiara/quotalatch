@@ -149,6 +149,10 @@ acquire their own resources in a consistent order too.
 
 ## Development
 
+The package ships inline type information for type checkers such as mypy.
+No separate stub package is required. Type annotations describe the API;
+amount validation and budget admission still happen at runtime.
+
 ```sh
 uv run ruff check .
 uv run ruff format --check .
