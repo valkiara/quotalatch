@@ -30,3 +30,11 @@ class BudgetExceeded(LedgerError):
             f"Budget {budget_id!r}: requested {requested_micro} micro-USD, "
             f"available {available_micro}"
         )
+
+    def __reduce__(self):
+        # Exception.args contains the formatted message, not our constructor inputs.
+        return (
+            type(self),
+            (self.budget_id, self.requested_micro, self.available_micro),
+            self.__dict__,
+        )
