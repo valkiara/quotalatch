@@ -160,3 +160,6 @@ crashes, concurrent settlement/recovery, tenant isolation, and queue rollback.
 Sync psycopg connections keep this first release small; async adapters, model pricing,
 and provider-specific integrations are future work. Never put prompts, credentials,
 or personal data in receipt references or reason strings.
+
+For setup, test expectations, and schema compatibility guidance, see
+[Contributing to QuotaLatch](CONTRIBUTING.md).
